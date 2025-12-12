@@ -1,113 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ackee Forced Tracking</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; }
-        button { padding: 10px 20px; background: #007cba; color: white; border: none; cursor: pointer; margin: 10px 5px; }
-        #status { color: orange; }
-        button:disabled { background: #cccccc; cursor: not-allowed; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatAI Pro - Privacy-Focused AI Chat Solutions</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="yourdomain.com" src="https://plausible.io/js/plausible.js"></script>
 </head>
 <body>
-    <h1>✅ Ackee Force-Enable Demo</h1>
-    <p>Status: <strong id="status">Loading tracker...</strong></p>
-    
-    <button id="pageViewBtn" disabled>📈 Track Page View</button>
-    <button id="clickBtn" disabled>🖱️ Track Button Click</button>
-    <button id="customBtn" disabled>⚡ Track Custom Event</button>
-    <button id="debugBtn" onclick="showDebug()">🔍 Show Debug Info</button>
-    
-    <script>
-        // DISABLE LOCALHOST CHECK ENTIRELY
-        window.ackeeSettings = { ignoreLocalhost: false };
-        
-        let ackeeInstance = null;
-        
-        // HARDCORE PATCH: Override localhost detection
-        function patchAckee() {
-            // Patch the function that checks localhost
-            if (typeof ackeeTracker !== 'undefined' && ackeeTracker.detect) {
-                const originalDetect = ackeeTracker.detect;
-                ackeeTracker.detect = function() {
-                    console.log('📍 Ackee localhost check bypassed');
-                    return false; // Never ignore
-                };
-            }
-        }
-        
-        // Function to initialize when tracker loads
-        function initAckee() {
-            try {
-                // Create Ackee instance with correct parameters
-                ackeeInstance = ackeeTracker.create(
-                    'http://localhost:3000',  // server URL
-                    '3f1839c8-06a4-4046-b785-c83763978b7a'          // domain ID - REPLACE THIS
-                );
-                
-                // Enable buttons
-                document.getElementById('pageViewBtn').disabled = false;
-                document.getElementById('clickBtn').disabled = false;
-                document.getElementById('customBtn').disabled = false;
-                document.getElementById('status').innerHTML = '✅ Tracking ready!<br>Click buttons to test.';
-                document.getElementById('status').style.color = 'green';
-                
-            } catch (error) {
-                console.error('Failed to initialize Ackee:', error);
-                document.getElementById('status').textContent = '❌ Init failed: ' + error.message;
-                document.getElementById('status').style.color = 'red';
-            }
-        }
-        
-        function trackPageView() {
-            if (ackeeInstance) {
-                ackeeInstance.record();
-                alert('📊 Page view tracked!');
-            }
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">ChatAI<span class="highlight">Pro</span></div>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+            <div class="hero">
+                <h1>Converse with the Future of AI</h1>
+                <p>Experience next-generation conversational AI with our privacy-focused platform. No data harvesting, just intelligent conversations.</p>
+                <a href="#pricing" class="btn btn-primary">Get Started Free</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Choose ChatAI Pro?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>Your conversations stay private. We never sell or share your data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Get responses in milliseconds with our optimized AI models.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🧠</div>
+                    <h3>Smart Context</h3>
+                    <p>Our AI remembers context for more natural conversations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔄</div>
+                    <h3>Continuous Learning</h3>
+                    <p>Our models improve constantly without compromising privacy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <p class="subtitle">Choose the plan that fits your needs. All plans include core features.</p>
             
-        }
-        
-        function trackButtonClick() {
-    // DIRECT API FALLBACK
-    fetch('http://localhost:3000/api/actions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            domainId: '3f1839c8-06a4-4046-b785-c83763978b7a',
-            name: 'button-click',
-            meta: { forced: true }
-                alert('🖱️ Button click tracked!');
-            }
-    });
-}
-        }
-        
-        function trackCustomEvent() {
-            if (ackeeInstance) {
-                ackeeInstance.action('custom-event', {
-                    label: 'User performed custom action',
-                    value: Math.random()
-                });
-                alert('⚡ Custom event tracked!');
-            }
-        }
-         function showDebug() {
-            console.log('=== ACKEE DEBUG INFO ===');
-            console.log('Window location:', window.location);
-            console.log('Ackee object:', typeof ackeeTracker !== 'undefined' ? 'LOADED' : 'MISSING');
-            if (ackeeInstance) {
-                console.log('Ackee instance:', ackeeInstance);
-            }
-        }
-        // Set up button event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('pageViewBtn').addEventListener('click', trackPageView);
-            document.getElementById('clickBtn').addEventListener('click', trackButtonClick);
-            document.getElementById('customBtn').addEventListener('click', trackCustomEvent);
-        });
-    </script>
-    
-    <!-- Load tracker AFTER setting up the init function -->
-    <script async src="http://localhost:3000/tracker.js" onload="initAckee()"></script>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">\$9<span>/month</span></div>
+                    <ul>
+                        <li>500 messages/month</li>
+                        <li>Standard response speed</li>
+                        <li>Email support</li>
+                        <li>Basic knowledge base</li>
+                    </ul>
+                    <button class="btn btn-outline" data-plan="starter">Get Started</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3>Professional</h3>
+                    <div class="price">\$29<span>/month</span></div>
+                    <ul>
+                        <li>5,000 messages/month</li>
+                        <li>Priority response speed</li>
+                        <li>Priority email support</li>
+                        <li>Advanced knowledge base</li>
+                        <li>Custom persona creation</li>
+                    </ul>
+                    <button class="btn btn-primary" data-plan="professional">Get Professional</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Business</h3>
+                    <div class="price">\$79<span>/month</span></div>
+                    <ul>
+                        <li>Unlimited messages</li>
+                        <li>Highest response priority</li>
+                        <li>24/7 dedicated support</li>
+                        <li>Enterprise knowledge base</li>
+                        <li>Team collaboration tools</li>
+                        <li>API access</li>
+                    </ul>
+                    <button class="btn btn-outline" data-plan="business">Get Business</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul>
+                        <li>Everything in Business</li>
+                        <li>Dedicated infrastructure</li>
+                        <li>On-premise deployment</li>
+                        <li>Custom integrations</li>
+                        <li>Personal account manager</li>
+                        <li>SLA guarantees</li>
+                    </ul>
+                    <button class="btn btn-outline" data-plan="enterprise">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="analytics-demo">
+        <div class="container">
+            <div class="demo-content">
+                <h2>Privacy-First Analytics Demo</h2>
+                <p>This page uses Plausible Analytics - a privacy-friendly alternative to Google Analytics. Unlike traditional analytics tools, Plausible:</p>
+                <ul>
+                    <li>Doesn't use cookies</li>
+                    <li>Doesn't collect personal data</li>
+                    <li>Is fully GDPR compliant</li>
+                    <li>Loads in under 1KB</li>
+                </ul>
+                <p>Check out the dashboard to see real-time visitor statistics without compromising user privacy!</p>
+                <a href="https://plausible.io" target="_blank" class="btn btn-secondary">Learn About Plausible</a>
+            </div>
+            <div class="demo-image">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZTVmOGZmIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzMzMzMzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxhdXNpYmxlIEFuYWx5dGljczwvdGV4dD4KICA8dGV4dCB4PSI1MCUiIHk9IjcwJSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjY2NjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcml2YWN5LUZpcnN0IEFsdGVybmF0aXZlPC90ZXh0Pgo8L3N2Zz4=" alt="Analytics Dashboard" />
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">ChatAI<span class="highlight">Pro</span></div>
+                <p>Making AI conversations accessible while respecting your privacy.</p>
+                <div class="footer-links">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 ChatAI Pro. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
